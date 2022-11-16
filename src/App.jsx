@@ -4,6 +4,8 @@ import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
+import { DatePicker } from "antd";
+import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
 
 function App() {
   const timerTime = 2;
@@ -27,13 +29,34 @@ function App() {
     setRunning(false);
   };
 
-  useInterval(() => {
-    if (time > 0) {
-      if (!running) return;
-      setTime((x) => x - 1);
+  const handleKeyDown = (event) => {
+    if (event.key == " ") handleClick();
+    if (event.key !== "Tab") {
+      const ele = event.composedPath()[0];
+      const isInput =
+        ele instanceof HTMLInputElement || ele instanceof HTMLTextAreaElement;
+      if (!ele || !isInput || event.key === "Escape") {
+        event.preventDefault();
+      }
+    }
+  };
 
-      if (time <= 1) finish();
-    } else if (running) {
+  useEffect(() => {
+    console.log("use effect!");
+
+    addEventListener("keypress", handleKeyDown, { capture: true });
+
+    return () => {
+      removeEventListener("keypress", handleKeyDown, { capture: true });
+    };
+  }, [time, running]);
+
+  useInterval(() => {
+    if (!running) return;
+
+    if (time > 1) {
+      setTime((x) => x - 1);
+    } else if (time > 0) {
       finish();
     }
   }, 1000);
