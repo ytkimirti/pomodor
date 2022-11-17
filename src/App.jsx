@@ -8,23 +8,25 @@ import Titlebar from "./Titlebar";
 import Bottom from "./Bottom";
 import ButtonPressSound from "./assets/sounds/ButtonPressSound.wav";
 import ButtonReleaseSound from "./assets/sounds/ButtonReleaseSound.wav";
+import AlarmSound from "./assets/sounds/AlarmSound1.mp3";
 import useSound from "use-sound";
 
 function App() {
-  const timerTime = 2;
   const [running, setRunning] = useState(false);
-  const [time, setTime] = useState(timerTime);
   const { width, height } = useWindowSize();
   const [data, setData] = useState({ work: 25, break: 5 });
+  const [time, setTime] = useState(data.work * 60);
   const [playButtonPress] = useSound(ButtonPressSound);
   const [playButtonRelease] = useSound(ButtonReleaseSound);
+  const [playAlarm] = useSound(AlarmSound);
+  const [isBreak, setIsBreak] = useState(false);
 
   useEffect(() => {
     console.log(data);
   }, [data]);
 
   const restart = () => {
-    setTime(timerTime);
+    setTime((isBreak ? data.work : data.break) * 60);
     setRunning(false);
   };
 
@@ -42,10 +44,14 @@ function App() {
   const finish = () => {
     setTime(0);
     setRunning(false);
+    setIsBreak((x) => !x);
+    playAlarm();
   };
 
   const handleKeyDown = (event) => {
     if (event.key == " ") handleClick();
+    if (event.key == "r") restart();
+    if (event.key == "f") finish();
     if (event.key !== "Tab") {
       const ele = event.composedPath()[0];
       const isInput =
@@ -59,10 +65,10 @@ function App() {
   useEffect(() => {
     console.log("use effect!");
 
-    addEventListener("keydown", handleKeyDown, { capture: true });
+    addEventListener("keypress", handleKeyDown, { capture: true });
 
     return () => {
-      removeEventListener("keydown", handleKeyDown, { capture: true });
+      removeEventListener("keypress", handleKeyDown, { capture: true });
     };
   }, [time, running]);
 
@@ -92,7 +98,7 @@ function App() {
         <Confetti
           width={width}
           height={height}
-          numberOfPieces={time === 0 ? 100 : 0}
+          numberOfPieces={time === 0 ? 5 : 0}
         />
 
         {/* Center container */}
@@ -102,7 +108,9 @@ function App() {
             onClick={() => handleClick()}
             onMouseDown={() => handleMouseDown()}
           >
-            {time}
+            {`${Math.floor(time / 60) < 10 ? "0" : ""}${Math.floor(
+              time / 60
+            )}:${time % 60 < 10 ? "0" : ""}${time % 60}`}
           </span>
         </div>
       </div>
