@@ -1,5 +1,7 @@
 import { useSpring, animated, config, useSpringRef } from "@react-spring/web";
 import { useRef, useState } from "react";
+import useSound from "use-sound";
+import SwitchOnSound from "./assets/sounds/SwitchOnSound.mp3";
 
 export default function NumberInput({ label, time, setTime }) {
   const [pressed, setPressed] = useState(false);
@@ -8,6 +10,7 @@ export default function NumberInput({ label, time, setTime }) {
     config: { tension: 300, friction: 20, mass: 1 },
   });
 
+  const [playTick] = useSound(SwitchOnSound);
   const springRef = useSpringRef();
   const divRef = useRef();
   const translateY = useSpring({
@@ -17,12 +20,13 @@ export default function NumberInput({ label, time, setTime }) {
   });
 
   const handleChange = (e) => {
+    // On a key is pressed
+    playTick();
+
     console.log(springRef.current);
 
-    // springRef.current.translateY = 30;
     springRef.start({ translateY: 20 });
     setTimeout(() => springRef.start({ translateY: 0 }), 30);
-    // springRef.current.
     setTime(e.target.value);
   };
 

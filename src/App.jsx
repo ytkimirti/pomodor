@@ -6,6 +6,9 @@ import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 import Titlebar from "./Titlebar";
 import Bottom from "./Bottom";
+import ButtonPressSound from "./assets/sounds/ButtonPressSound.wav";
+import ButtonReleaseSound from "./assets/sounds/ButtonReleaseSound.wav";
+import useSound from "use-sound";
 
 function App() {
   const timerTime = 2;
@@ -13,6 +16,8 @@ function App() {
   const [time, setTime] = useState(timerTime);
   const { width, height } = useWindowSize();
   const [data, setData] = useState({ work: 25, break: 5 });
+  const [playButtonPress] = useSound(ButtonPressSound);
+  const [playButtonRelease] = useSound(ButtonReleaseSound);
 
   useEffect(() => {
     console.log(data);
@@ -23,7 +28,12 @@ function App() {
     setRunning(false);
   };
 
+  const handleMouseDown = () => {
+    playButtonPress();
+  };
+
   const handleClick = () => {
+    playButtonRelease();
     if (!running && time > 0) setRunning(true);
     else if (running) setRunning(false);
     else if (!running) restart();
@@ -49,10 +59,10 @@ function App() {
   useEffect(() => {
     console.log("use effect!");
 
-    addEventListener("keypress", handleKeyDown, { capture: true });
+    addEventListener("keydown", handleKeyDown, { capture: true });
 
     return () => {
-      removeEventListener("keypress", handleKeyDown, { capture: true });
+      removeEventListener("keydown", handleKeyDown, { capture: true });
     };
   }, [time, running]);
 
@@ -90,6 +100,7 @@ function App() {
           <span
             className="text-7xl select-none text-white font-extrabold hover:border-2 hover:p-2 cursor-pointer transition-all"
             onClick={() => handleClick()}
+            onMouseDown={() => handleMouseDown()}
           >
             {time}
           </span>
