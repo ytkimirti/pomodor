@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import useSound from "use-sound";
 import SwitchOnSound from "./assets/sounds/SwitchOnSound.mp3";
 
-export default function NumberInput({ label, time, setTime }) {
+export default function NumberInput({ label, time, setTime, min, max }) {
   const [pressed, setPressed] = useState(false);
   const scale = useSpring({
     scale: pressed ? 0.9 : 1,
@@ -40,8 +40,8 @@ export default function NumberInput({ label, time, setTime }) {
         text-white border-[1.5px] rounded-md selection-white
         focus:outline-none border-transparent hover:border-white cursor-pointer transition-all"
           type="number"
-          min={0}
-          max={240}
+          min={min ?? 0}
+          max={max ?? 240}
           value={time}
           onChange={handleChange}
           onMouseDown={(e) => {
