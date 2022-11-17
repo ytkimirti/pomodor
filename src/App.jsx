@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/tauri";
-import "./App.css";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 import Titlebar from "./Titlebar";
@@ -12,23 +11,32 @@ import AlarmSound from "./assets/sounds/AlarmSound1.mp3";
 import useSound from "use-sound";
 import RainSound from "./assets/sounds/rain.mp3";
 import { Howl } from "howler";
+import { useLocalStorage } from "react-use";
 
 function App() {
   const [running, setRunning] = useState(false);
   const { width, height } = useWindowSize();
-  const [data, setData] = useState({ work: 25, break: 5 });
+  const [data, setData] = useLocalStorage("data", {
+    work: 25,
+    break: 5,
+    volume: 50,
+  });
   const [time, setTime] = useState(data.work * 60);
   const [playButtonPress] = useSound(ButtonPressSound);
   const [playButtonRelease] = useSound(ButtonReleaseSound);
   const [playAlarm] = useSound(AlarmSound);
   const [isBreak, setIsBreak] = useState(false);
+  let rainObject = useRef(null);
 
   useEffect(() => {
     let sound = new Howl({ src: [RainSound], loop: true });
     console.log(RainSound);
     sound.play();
+    rainObject.current = sound;
     return () => sound.stop();
   }, []);
+
+  if (rainObject.current !== null) rainObject.current.volume(data.volume / 100);
 
   useEffect(() => {
     console.log(data);

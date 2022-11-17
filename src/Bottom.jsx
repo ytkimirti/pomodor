@@ -49,6 +49,13 @@ export default function Bottom({ data, setData }) {
             time={data.break}
             setTime={(newTime) => setData((x) => ({ ...x, break: newTime }))}
           />
+          <NumberInput
+            label="rain"
+            min={0}
+            max={100}
+            time={data.volume}
+            setTime={(newTime) => setData((x) => ({ ...x, volume: newTime }))}
+          />
         </form>
       </animated.div>
     </div>
