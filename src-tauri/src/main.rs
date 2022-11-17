@@ -3,9 +3,9 @@
     windows_subsystem = "windows"
 )]
 
-use tauri::{Builder, Manager, RunEvent, Wry};
+use tauri::SystemTray;
 use tauri::{CustomMenuItem, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem};
-use tauri::{EventLoopMessage, SystemTray};
+use tauri::{Manager, RunEvent};
 
 fn main() {
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
