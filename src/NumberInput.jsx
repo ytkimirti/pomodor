@@ -27,7 +27,7 @@ export default function NumberInput({ label, time, setTime, min, max }) {
 
     springRef.start({ translateY: 20 });
     setTimeout(() => springRef.start({ translateY: 0 }), 30);
-    setTime(e.target.value);
+    setTime(+e.target.value);
   };
 
   return (
@@ -40,8 +40,8 @@ export default function NumberInput({ label, time, setTime, min, max }) {
         text-white border-[1.5px] rounded-md selection-white
         focus:outline-none border-transparent hover:border-white cursor-pointer transition-all"
           type="number"
-          min={min ?? 0}
-          max={max ?? 240}
+          min={min ?? "0"}
+          max={max ?? "240"}
           value={time}
           onChange={handleChange}
           onMouseDown={(e) => {

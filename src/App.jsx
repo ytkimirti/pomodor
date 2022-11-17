@@ -16,7 +16,7 @@ import { useLocalStorage } from "react-use";
 function App() {
   const [running, setRunning] = useState(false);
   const { width, height } = useWindowSize();
-  const [data, setData] = useLocalStorage("data", {
+  const [data, setData] = useState({
     work: 25,
     break: 5,
     volume: 50,
@@ -30,7 +30,6 @@ function App() {
 
   useEffect(() => {
     let sound = new Howl({ src: [RainSound], loop: true });
-    console.log(RainSound);
     sound.play();
     rainObject.current = sound;
     return () => sound.stop();
@@ -80,8 +79,6 @@ function App() {
   };
 
   useEffect(() => {
-    console.log("use effect!");
-
     addEventListener("keypress", handleKeyDown, { capture: true });
 
     return () => {
@@ -135,6 +132,8 @@ function App() {
   );
 }
 
+export default App;
+
 // source: https://overreacted.io/making-setinterval-declarative-with-react-hooks/
 function useInterval(callback, delay) {
   const savedCallback = useRef();
@@ -158,5 +157,3 @@ function useInterval(callback, delay) {
 
 // https://stackoverflow.com/a/2998874/1673761
 const twoDigits = (num) => String(num).padStart(2, "0");
-
-export default App;
