@@ -22,7 +22,7 @@ export default function Bottom({ data, setData }) {
     config,
   });
   return (
-    <div ref={box} className="fixed h-[120px] bottom-0 left-0 right-0">
+    <div ref={box} className="fixed h-[100px] bottom-0 left-0 right-0">
       {/* Container that changes height */}
       <animated.div
         style={bottomProps}
