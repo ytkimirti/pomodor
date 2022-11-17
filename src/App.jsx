@@ -4,8 +4,6 @@ import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
-import { DatePicker } from "antd";
-import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
 import Titlebar from "./Titlebar";
 import Bottom from "./Bottom";
 
