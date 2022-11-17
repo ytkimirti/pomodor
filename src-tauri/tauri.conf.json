@@ -60,10 +60,11 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "height": 300,
         "resizable": true,
         "title": "pomodor",
-        "width": 800
+        "width": 300,
+        "titleBarStyle": "Overlay"
       }
     ]
   }

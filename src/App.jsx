@@ -6,6 +6,7 @@ import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 import { DatePicker } from "antd";
 import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
+import Titlebar from "./Titlebar";
 
 function App() {
   const timerTime = 2;
@@ -85,8 +86,11 @@ function App() {
         >
           {time}
         </span>
+    <>
+      <Titlebar />
       </div>
     </div>
+    </>
   );
 }
 
