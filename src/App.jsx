@@ -10,6 +10,8 @@ import ButtonPressSound from "./assets/sounds/ButtonPressSound.wav";
 import ButtonReleaseSound from "./assets/sounds/ButtonReleaseSound.wav";
 import AlarmSound from "./assets/sounds/AlarmSound1.mp3";
 import useSound from "use-sound";
+import RainSound from "./assets/sounds/rain.mp3";
+import { Howl } from "howler";
 
 function App() {
   const [running, setRunning] = useState(false);
@@ -20,6 +22,13 @@ function App() {
   const [playButtonRelease] = useSound(ButtonReleaseSound);
   const [playAlarm] = useSound(AlarmSound);
   const [isBreak, setIsBreak] = useState(false);
+
+  useEffect(() => {
+    let sound = new Howl({ src: [RainSound], loop: true });
+    console.log(RainSound);
+    sound.play();
+    return () => sound.stop();
+  }, []);
 
   useEffect(() => {
     console.log(data);
