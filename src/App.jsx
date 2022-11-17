@@ -7,12 +7,18 @@ import Confetti from "react-confetti";
 import { DatePicker } from "antd";
 import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
 import Titlebar from "./Titlebar";
+import Bottom from "./Bottom";
 
 function App() {
   const timerTime = 2;
   const [running, setRunning] = useState(false);
   const [time, setTime] = useState(timerTime);
   const { width, height } = useWindowSize();
+  const [data, setData] = useState({ work: 25, break: 5 });
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   const restart = () => {
     setTime(timerTime);
@@ -69,27 +75,28 @@ function App() {
   }
 
   return (
-    <div
-      className={`h-screen ${bgColor} text-center flex justify-center items-center transition-colors`}
-    >
-      <Confetti
-        width={width}
-        height={height}
-        numberOfPieces={time === 0 ? 100 : 0}
-      />
-
-      {/* Center container */}
-      <div className="">
-        <span
-          className="text-7xl select-none text-white font-extrabold hover:border-2 hover:p-2 cursor-pointer transition-all"
-          onClick={() => handleClick()}
-        >
-          {time}
-        </span>
     <>
       <Titlebar />
+      <Bottom data={data} setData={setData} />
+      <div
+        className={`select-none h-screen ${bgColor} text-center flex justify-center items-center transition-colors`}
+      >
+        <Confetti
+          width={width}
+          height={height}
+          numberOfPieces={time === 0 ? 100 : 0}
+        />
+
+        {/* Center container */}
+        <div className="">
+          <span
+            className="text-7xl select-none text-white font-extrabold hover:border-2 hover:p-2 cursor-pointer transition-all"
+            onClick={() => handleClick()}
+          >
+            {time}
+          </span>
+        </div>
       </div>
-    </div>
     </>
   );
 }
