@@ -1,5 +1,4 @@
-import { useEffect, useState, useRef } from "react";
-import reactLogo from "./assets/react.svg";
+import { useEffect, useState, useRef, FC, KeyboardEventHandler } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
@@ -12,30 +11,39 @@ import useSound from "use-sound";
 import RainSound from "./assets/sounds/rain.mp3";
 import { Howl } from "howler";
 import { useLocalStorage } from "react-use";
+import { useInterval } from "./useInterval";
 
-function App() {
+export type Data = {
+  work: number;
+  break: number;
+  volume: number;
+};
+
+const App: FC = () => {
   const [running, setRunning] = useState(false);
   const { width, height } = useWindowSize();
-  const [data, setData] = useState({
+  const [data, setData] = useState<Data>({
     work: 25,
     break: 5,
     volume: 50,
   });
-  const [time, setTime] = useState(data.work * 60);
+  const [time, setTime] = useState<number>(data.work * 60);
   const [playButtonPress] = useSound(ButtonPressSound);
   const [playButtonRelease] = useSound(ButtonReleaseSound);
   const [playAlarm] = useSound(AlarmSound);
   const [isBreak, setIsBreak] = useState(false);
-  let rainObject = useRef(null);
+  let rainRef = useRef<Howl | null>(null);
 
   useEffect(() => {
     let sound = new Howl({ src: [RainSound], loop: true });
     sound.play();
-    rainObject.current = sound;
-    return () => sound.stop();
+    rainRef.current = sound;
+    return () => {
+      sound.stop();
+    };
   }, []);
 
-  if (rainObject.current !== null) rainObject.current.volume(data.volume / 100);
+  if (rainRef.current !== null) rainRef.current.volume(data.volume / 100);
 
   useEffect(() => {
     console.log(data);
@@ -64,16 +72,20 @@ function App() {
     playAlarm();
   };
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key == " ") handleClick();
     if (event.key == "r") restart();
     if (event.key == "f") finish();
     if (event.key !== "Tab") {
-      const ele = event.composedPath()[0];
-      const isInput =
-        ele instanceof HTMLInputElement || ele instanceof HTMLTextAreaElement;
-      if (!ele || !isInput || event.key === "Escape") {
-        event.preventDefault();
+      try {
+        const ele = (event as any).composedPath()[0];
+        const isInput =
+          ele instanceof HTMLInputElement || ele instanceof HTMLTextAreaElement;
+        if (!ele || !isInput || event.key === "Escape") {
+          event.preventDefault();
+        }
+      } catch (error) {
+        console.log(error);
       }
     }
   };
@@ -130,30 +142,8 @@ function App() {
       </div>
     </>
   );
-}
+};
 
 export default App;
 
-// source: https://overreacted.io/making-setinterval-declarative-with-react-hooks/
-function useInterval(callback, delay) {
-  const savedCallback = useRef();
-
-  // Remember the latest callback.
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  // Set up the interval.
-  useEffect(() => {
-    function tick() {
-      savedCallback.current();
-    }
-    if (delay !== null) {
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
-}
-
-// https://stackoverflow.com/a/2998874/1673761
-const twoDigits = (num) => String(num).padStart(2, "0");
+const twoDigits = (num: number) => String(num).padStart(2, "0");

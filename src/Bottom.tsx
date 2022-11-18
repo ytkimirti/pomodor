@@ -1,13 +1,24 @@
-import { useSpring, animated, useReducedMotion } from "@react-spring/web";
-import { useRef } from "react";
+import {
+  useSpring,
+  animated,
+  useReducedMotion,
+  SpringConfig,
+} from "@react-spring/web";
+import React, { FC, useRef } from "react";
 import { useHover, useHoverDirty } from "react-use";
+import { Data } from "./App";
 import NumberInput from "./NumberInput";
 
-export default function Bottom({ data, setData }) {
-  const box = useRef();
+type Props = {
+  data: Data;
+  setData: React.Dispatch<React.SetStateAction<Data>>;
+};
+
+const Bottom: FC<Props> = ({ data, setData }) => {
+  const box = useRef<HTMLDivElement>(null);
   const isHovering = useHoverDirty(box);
   // const isHovering = true;
-  const config = {
+  const config: SpringConfig = {
     tension: 261,
     friction: 19,
     precision: 0.001,
@@ -41,23 +52,26 @@ export default function Bottom({ data, setData }) {
           {/* Input */}
           <NumberInput
             label="work"
-            time={data.work}
-            setTime={(newTime) => setData((x) => ({ ...x, work: newTime }))}
+            value={data.work}
+            onChange={(newValue) => setData((x) => ({ ...x, work: newValue }))}
           />
           <NumberInput
             label="break"
-            time={data.break}
-            setTime={(newTime) => setData((x) => ({ ...x, break: newTime }))}
+            value={data.break}
+            onChange={(newValue) => setData((x) => ({ ...x, break: newValue }))}
           />
           <NumberInput
             label="rain"
             min={0}
             max={100}
-            time={data.volume}
-            setTime={(newTime) => setData((x) => ({ ...x, volume: newTime }))}
+            value={data.volume}
+            onChange={(newValue) =>
+              setData((x) => ({ ...x, volume: newValue }))
+            }
           />
         </form>
       </animated.div>
     </div>
   );
-}
+};
+export default Bottom;
