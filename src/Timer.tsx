@@ -70,15 +70,19 @@ const Timer: FC<TimerProps> = ({ data }) => {
     };
   }, [time, running]);
 
-  useInterval(() => {
-    if (!running) return;
+  useEffect(() => {
+    let lastTime = Date.now();
 
-    if (time > 1) {
-      setTime((x) => x - 1);
-    } else if (time > 0) {
-      finish();
-    }
-  }, 1000);
+    const int = setInterval(() => {
+      const diffSecs = Math.floor((Date.now() - lastTime) / 1000);
+      console.log(diffSecs);
+      if (diffSecs < 1) return;
+      lastTime = Date.now();
+
+      setTime((s) => (diffSecs > s ? 0 : s - diffSecs));
+    }, 100);
+    return () => clearInterval(int);
+  }, [setTime]);
 
   let bgColor = "bg-black";
   if (!running) {
