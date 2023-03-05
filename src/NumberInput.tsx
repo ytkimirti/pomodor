@@ -11,7 +11,14 @@ type Props = {
   onChange: (newValue: number) => void;
 };
 
-const NumberInput: FC<Props> = ({ label, value, onChange, min, max }) => {
+const NumberInput: FC<Props> = ({
+  label,
+  value,
+  onChange,
+  min = 0,
+  max = 100,
+}) => {
+  const [isEmpty, setIsEmpty] = useState(false);
   const [pressed, setPressed] = useState(false);
   const scale = useSpring({
     scale: pressed ? 0.9 : 1,
@@ -34,7 +41,16 @@ const NumberInput: FC<Props> = ({ label, value, onChange, min, max }) => {
 
     springRef.start({ translateY: 20 });
     setTimeout(() => springRef.start({ translateY: 0 }), 30);
-    onChange(+e.target.value);
+    const curr = e.target.value;
+
+    if (curr.trim() === "") setIsEmpty(true);
+    else setIsEmpty(false);
+
+    let num = Number(curr);
+    if (Number.isNaN(num)) return;
+    if (num < min) num = min;
+    if (num > max) num = max;
+    onChange(num);
   };
 
   return (
@@ -46,10 +62,8 @@ const NumberInput: FC<Props> = ({ label, value, onChange, min, max }) => {
         bg-transparent text-center text-5xl font-extrabold 
         text-white border-[1.5px] rounded-md selection-white
         focus:outline-none border-transparent hover:border-white cursor-pointer transition-all"
-          type="number"
-          min={min ?? "0"}
-          max={max ?? "240"}
-          value={value}
+          type="text"
+          value={isEmpty ? "" : value}
           onChange={handleChange}
           onMouseDown={(e) => {
             (e.target as HTMLInputElement).select();
