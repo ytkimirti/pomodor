@@ -78,10 +78,10 @@ const Timer: FC<TimerProps> = ({ data }) => {
       if (diffSecs < 1) return;
       lastTime = Date.now();
 
-      setTime((s) => (diffSecs > s ? 0 : s - diffSecs));
+      if (running) setTime((s) => (diffSecs > s ? 0 : s - diffSecs));
     }, 100);
     return () => clearInterval(int);
-  }, [setTime]);
+  }, [running, setTime]);
 
   let bgColor = "bg-black";
   if (!running) {
