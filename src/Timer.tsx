@@ -75,7 +75,6 @@ const Timer: FC<TimerProps> = ({ data }) => {
 
     const int = setInterval(() => {
       const diffSecs = Math.floor((Date.now() - lastTime) / 1000);
-      console.log(diffSecs);
       if (diffSecs < 1) return;
       lastTime = Date.now();
 
